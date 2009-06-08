@@ -51,9 +51,7 @@ use strict;
       my $total_dollars = shift;
       my $shipping_fees = shift;
 
-      my @items = ();
-
-      my $self = {Items => [ @items ],
+      my $self = {Items => [ () ],
 		  Title => $order_name,
 		  Shipping => $shipping_fees,
 		  Total_dollars => $total_dollars,
@@ -85,7 +83,7 @@ use strict;
       my $total = 0;
 
       for my $item (@{$self->{Items}}) {
-	  $total += $item->get_price();
+	  $total += $item->get_price() * $item->get_quantity();
       }
 
       $total;
@@ -95,6 +93,26 @@ use strict;
       my $self = shift;
 
       (($self->total_items() + $self->{Shipping}) ==  $self->{Total_dollars});
+  }
+
+  sub get_people_percent {
+      my $self = shift;
+
+      my %people;
+
+      for my $item (@{$self->{Items}}) {
+	  if (!exists($people{$item->get_person()})) {
+	      $people{$item->get_person()} = 0;
+	  }
+
+	  $people{$item->get_person()} += $item->get_price();
+      }
+
+      for my $person (keys %people) {
+	  $people{$person} = Util::floor(($people{$person} / $self->total_items() * 100), 2);
+      }
+
+      %people;
   }
 
   sub print_items {
@@ -116,7 +134,15 @@ use strict;
 
       "ThinkGeek order ".$self->{Title}."\n";
   }
+}
 
+{ package Util;
+
+  sub floor {
+      my ($n, $places) = @_;
+      my $factor = 10 ** ($places || 0);
+      return int(($n * $factor) + ($n < 0 ? -1 : 1) * 0.1) / $factor;
+  }
 }
 
 1;
