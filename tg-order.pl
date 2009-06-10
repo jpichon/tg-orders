@@ -56,7 +56,7 @@ use strict;
 		  Shipping => $shipping_fees,
 		  Total_dollars => $total_dollars,
 		  Total_euro => 0,
-		  Customs => undef, };
+		  Customs => 0, };
       bless $self, $class;
 
       $self;
@@ -115,20 +115,6 @@ use strict;
       %people;
   }
 
-  sub print_items {
-      my $self = shift;
-
-      print $self->get_title()."\n";
-      print "Item name\tQty\tPrice\tPerson\n";
-
-      for my $item (@{$self->{Items}}) {
-	  print $item->get_name()."\t";
-	  print $item->get_quantity."\t";
-	  print $item->get_price."\t";
-	  print $item->get_person."\n";
-      }
-  }
-
   sub get_people_share_order {
       my $self = shift;
 
@@ -159,6 +145,37 @@ use strict;
       %share_total;
   }
 
+  sub print_items {
+      my $self = shift;
+
+      print $self->get_title()."\n";
+      print "Item name\tQty\tPrice\tPerson\n";
+
+      for my $item (@{$self->{Items}}) {
+	  print $item->get_name()."\t";
+	  print $item->get_quantity."\t";
+	  print $item->get_price."\t";
+	  print $item->get_person."\n";
+      }
+  }
+
+  sub set_total_euro {
+      my $self = shift;
+      my $total_euro = shift;
+
+      $self->{Total_euro} = $total_euro;
+
+      $self->{Total_euro};
+  }
+
+  sub set_custom_charges {
+      my $self = shift;
+      my $customs = shift;
+
+      $self->{Customs} = $customs;
+
+      $self->{Customs};
+  }
 
   sub get_title {
       my $self = shift;
