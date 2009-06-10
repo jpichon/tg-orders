@@ -129,6 +129,37 @@ use strict;
       }
   }
 
+  sub get_people_share_order {
+      my $self = shift;
+
+      my %people_percent = $self->get_people_percent();
+
+  }
+
+  sub get_people_share_customs {
+      my $self = shift;
+
+      my %people_percent = $self->get_people_percent();
+
+  }
+
+  sub get_people_share_total {
+      my $self = shift;
+
+      my %share_order = $self->get_people_share_order();
+      my %share_custom = $self->get_people_share_customs();
+
+      my %share_total;
+
+
+      for my $person (keys %share_order) {
+	  $share_total{$person} = $share_order{$person} + $share_custom{$person};
+      }
+
+      %share_total;
+  }
+
+
   sub get_title {
       my $self = shift;
 
@@ -141,7 +172,7 @@ use strict;
   sub floor {
       my ($n, $places) = @_;
       my $factor = 10 ** ($places || 0);
-      return int(($n * $factor) + ($n < 0 ? -1 : 1) * 0.1) / $factor;
+      return int($n * $factor) / $factor;
   }
 }
 
