@@ -73,3 +73,18 @@ my %share = $o3->get_people_share_order();
 is($share{'B'}, 20, "Order share - B");
 is($share{'C'}, 29.99, "Order share - C");
 is($share{'J'}, 20, "Order share - J");
+
+is($o3->set_custom_charges(70), 70, "Order - Set custom charges");
+
+my %customs = $o3->get_people_share_customs();
+is($customs{'B'}, 20, "Order customs - B");
+is($customs{'C'}, 29.99, "Order customs - C");
+is($customs{'J'}, 20, "Order customs - J");
+
+is($o3->set_custom_charges(100), 100, "Order - Set custom charges (2)");
+
+my %customs = $o3->get_people_share_customs();
+is($customs{'B'}, 28.57, "Order customs  (2) - B");
+is($customs{'C'}, 42.85, "Order customs  (2) - C");
+is($customs{'J'}, 28.57, "Order customs  (2) - J");
+

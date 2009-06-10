@@ -135,6 +135,14 @@ use strict;
 
       my %percent = $self->get_people_percent();
 
+      my %share_customs;
+
+      for my $person (keys %percent) {
+	  $share_customs{$person} =
+	      Util::floor($self->{Customs} * $percent{$person}/100, 2);
+      }
+
+      %share_customs;
   }
 
   sub get_people_share_total {
