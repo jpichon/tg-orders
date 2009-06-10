@@ -118,14 +118,22 @@ use strict;
   sub get_people_share_order {
       my $self = shift;
 
-      my %people_percent = $self->get_people_percent();
+      my %percent = $self->get_people_percent();
 
-  }
+      my %share_order;
+
+      for my $person (keys %percent) {
+	  $share_order{$person} =
+	      Util::floor($self->{Total_euro} * $percent{$person}/100, 2);
+      }
+
+      %share_order;
+   }
 
   sub get_people_share_customs {
       my $self = shift;
 
-      my %people_percent = $self->get_people_percent();
+      my %percent = $self->get_people_percent();
 
   }
 
@@ -189,7 +197,7 @@ use strict;
   sub floor {
       my ($n, $places) = @_;
       my $factor = 10 ** ($places || 0);
-      return int($n * $factor) / $factor;
+      return int(($n * $factor) + ($n < 0 ? -1 : 1) * 0.1) / $factor;
   }
 }
 

@@ -25,7 +25,7 @@ is($item1->get_person(), 'C', 'Item->get_person');
 
 my $o = Order->new("Test June '09", '52.64', '17.63');
 
-can_ok($o, $_) for qw(add_item count_items total_items verify_total get_people_percent);
+can_ok($o, $_) for qw(add_item count_items total_items verify_total get_people_percent get_people_share_total get_people_share_order get_people_share_customs);
 
 $o->add_item($item1);
 $o->add_item($item2);
@@ -41,7 +41,7 @@ $o2->add_item($item2);
 is($o2->total_items, 35.01, 'Order->total_items (2)');
 isnt($o2->verify_total, 1, 'Order->verify_total (wrong total)');
 
-#
+# Percents...
 
 my $item3 = Item->new('Cool tee-shirt', 1, 10, 'C');
 my $item4 = Item->new('Random tee-shirt S', 1, 10, 'J');
@@ -64,3 +64,12 @@ my %ppl = $o3->get_people_percent();
 is ($ppl{'B'}, 28.57, "People percent - B");
 is ($ppl{'C'}, 42.85, "People percent - C");
 is ($ppl{'J'}, 28.57, "People percent - J");
+
+# Percents of order
+
+is($o3->set_total_euro(70), 70, "Order - Set total euro");
+
+my %share = $o3->get_people_share_order();
+is($share{'B'}, 20, "Order share - B");
+is($share{'C'}, 29.99, "Order share - C");
+is($share{'J'}, 20, "Order share - J");
