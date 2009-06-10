@@ -88,3 +88,9 @@ is($customs{'B'}, 28.57, "Order customs  (2) - B");
 is($customs{'C'}, 42.85, "Order customs  (2) - C");
 is($customs{'J'}, 28.57, "Order customs  (2) - J");
 
+$o3->set_custom_charges(20);
+
+my %total = $o3->get_people_share_total();
+is($total{'B'}, 25.71, "Order total share - B");
+is($total{'C'}, 38.56, "Order total share - C");
+is($total{'J'}, 25.71, "Order total share - J");
