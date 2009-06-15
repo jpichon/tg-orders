@@ -209,4 +209,42 @@ use strict;
   }
 }
 
+{ package TGParser;
+
+  sub parse {
+      my $file = shift;
+
+      open(IN, '<', $file) or die "Can't open '$file': $!";
+
+      while (<IN>) {
+	  my @line = split(/\s/);
+	  my $price = pop @line;
+	  my $qty = pop @line;
+	  while ($qty !~ /[\d]+/) {
+	      $qty = pop @line;
+	  }
+	  my $item = join(' ', @line);
+	  $item =~ s/\s{2,}/ /;
+	  print "Item: $item x $qty for $price\n";
+      }
+
+      close IN or warn $!;
+  }
+}
+
+# # # # #
+#
+# Driver
+#
+# # #
+
+if (defined($ARGV[0])) {
+
+    TGParser::parse($ARGV[0]);
+
+
+    #my $order = Order->new('Title', 'Total', 'Shipping');
+}
+
+
 1;
