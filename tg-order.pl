@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use 5.10.0;
+use 5.8.0;
 use strict;
 
 { package Item;
