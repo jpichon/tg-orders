@@ -213,22 +213,26 @@ use strict;
 
   sub parse {
       my $file = shift;
+      my @items;
 
       open(IN, '<', $file) or die "Can't open '$file': $!";
 
       while (<IN>) {
 	  my @line = split(/\s/);
 	  my $price = pop @line;
+	  $price =~ s/\$//;
 	  my $qty = pop @line;
 	  while ($qty !~ /[\d]+/) {
 	      $qty = pop @line;
 	  }
 	  my $item = join(' ', @line);
 	  $item =~ s/\s{2,}/ /;
-	  print "Item: $item x $qty for $price\n";
+	  push @items, [$item, $qty, $price];
       }
 
       close IN or warn $!;
+
+      @items;
   }
 }
 
@@ -240,10 +244,36 @@ use strict;
 
 if (defined($ARGV[0])) {
 
-    TGParser::parse($ARGV[0]);
+    my @items = TGParser::parse($ARGV[0]);
 
+    print "Order title?\n";
+    my $order_title = <STDIN>;
+    chomp($order_title);
 
-    #my $order = Order->new('Title', 'Total', 'Shipping');
+    print "Order total in dollars?\n";
+    my $total = <STDIN>;
+    chomp($total);
+
+    print "And the shipping?\n";
+    my $shipping = <STDIN>;
+    chomp($shipping);
+
+    print "Cool! Now, let's see who got what.\n";
+
+    my $order = Order->new($order_title, $total, $shipping);
+
+    for my $order_line (@items) {
+	my $name = shift @{$order_line};
+	my $qty = shift @{$order_line};
+	my $price = shift @{$order_line};
+
+	print "Item: $name x $qty for $price\n";
+
+	my $item = Item->new($name, $qty, $price, 'F');
+	$order->add_item($item);
+    }
+
+    print $order->total_items()."\n";
 }
 
 
