@@ -266,11 +266,10 @@ if (defined($ARGV[0])) {
 	my $name = shift @{$order_line};
 	my $qty = shift @{$order_line};
 	my $price = shift @{$order_line};
-	my $person = "";
 
 	while ($qty > 0) {
 	    print "Item: $name for $price\n";
-	    $person = <STDIN>;
+	    my $person = <STDIN>;
 	    chomp($person);
 
 	    my $item = Item->new($name, 1, $price, $person);
@@ -281,6 +280,31 @@ if (defined($ARGV[0])) {
     }
 
     print $order->total_items()."\n";
+
+    print "Order total in euros?\n";
+    my $total_euro = <STDIN>;
+    chomp($total_euro);
+    $order->set_total_euro($total_euro);
+
+    print "Got screwed over by Customs yet?\n";
+    my $custom_charges = <STDIN>;
+    chomp($custom_charges);
+
+    if ($custom_charges !~ /^\d+\.?\d*$/) { $custom_charges = 0; }
+
+    $order->set_custom_charges($custom_charges);
+
+    my %shares = $order->get_people_share_order();
+    my %customs = $order->get_people_share_customs();
+    my %totals = $order->get_people_share_total();
+
+    for my $person (keys %shares) {
+	my $share = $shares{$person};
+	my $cust = $customs{$person};
+	my $total = $totals{$person};
+	print "$person owes $total ($share for order, $cust for customs).\n";
+    }
+
 }
 
 
