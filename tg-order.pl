@@ -266,11 +266,18 @@ if (defined($ARGV[0])) {
 	my $name = shift @{$order_line};
 	my $qty = shift @{$order_line};
 	my $price = shift @{$order_line};
+	my $person = "";
 
-	print "Item: $name x $qty for $price\n";
+	while ($qty > 0) {
+	    print "Item: $name for $price\n";
+	    $person = <STDIN>;
+	    chomp($person);
 
-	my $item = Item->new($name, $qty, $price, 'F');
-	$order->add_item($item);
+	    my $item = Item->new($name, 1, $price, $person);
+	    $order->add_item($item);
+
+	    $qty--;
+	}
     }
 
     print $order->total_items()."\n";
