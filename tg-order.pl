@@ -161,6 +161,30 @@ use strict;
       %share_total;
   }
 
+  sub process_items {
+      my $self = shift;
+      my @items = @_;
+
+      for my $order_line (@items) {
+	  my $name = shift @{$order_line};
+	  my $qty = shift @{$order_line};
+	  my $price = shift @{$order_line};
+
+	  while ($qty > 0) {
+	      print "Item: $name for $price\n";
+	      my $person = <STDIN>;
+	      chomp($person);
+
+	      my $item = Item->new($name, 1, $price, $person);
+	      $self->add_item($item);
+
+	      $qty--;
+	  }
+      }
+
+      $self;
+  }
+
   sub print_items {
       my $self = shift;
 
@@ -261,25 +285,7 @@ if (defined($ARGV[0])) {
     print "Cool! Now, let's see who got what.\n";
 
     my $order = Order->new($order_title, $total, $shipping);
-
-    for my $order_line (@items) {
-	my $name = shift @{$order_line};
-	my $qty = shift @{$order_line};
-	my $price = shift @{$order_line};
-
-	while ($qty > 0) {
-	    print "Item: $name for $price\n";
-	    my $person = <STDIN>;
-	    chomp($person);
-
-	    my $item = Item->new($name, 1, $price, $person);
-	    $order->add_item($item);
-
-	    $qty--;
-	}
-    }
-
-    print $order->total_items()."\n";
+    $order->process_items(@items);
 
     print "Order total in euros?\n";
     my $total_euro = <STDIN>;
