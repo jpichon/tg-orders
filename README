@@ -1,0 +1,20 @@
+Ever organised a ThinkGeek group order and felt like pulling your hair
+out when calculating how much everyone owed for the order + shipping
+and then the order actually arrives and you have to do it all over
+again for the amazingly high Customs charges?
+
+Well, this script should help out a bit, so you have more time to
+enjoy your goodies and growl at Customs people.
+
+To check all is in order:
+
+   ./test_tg-order.pl
+
+To go for a test run:
+
+   ./tg-order.pl samples/sampleA-email
+
+The format is based on the list in the email ThinkGeek sends you when
+dispatching your order.
+
+There's kind of no error checking... yet.
