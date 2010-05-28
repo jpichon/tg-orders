@@ -242,13 +242,19 @@ use strict;
       open(IN, '<', $file) or die "Can't open '$file': $!";
 
       while (<IN>) {
+	  if (/^\w*$/) { next; }
+
 	  my @line = split(/\s/);
+
 	  my $price = pop @line;
 	  $price =~ s/\$//;
+
 	  my $qty = pop @line;
+
 	  while ($qty !~ /[\d]+/) {
 	      $qty = pop @line;
 	  }
+
 	  my $item = join(' ', @line);
 	  $item =~ s/\s{2,}/ /;
 	  push @items, [$item, $qty, $price];
