@@ -311,6 +311,8 @@ if (defined($ARGV[0])) {
 	print "$person owes $total ($share for order, $cust for customs).\n";
     }
 
+} else {
+    print "Usage: $0 <order_filename>\n"
 }
 
 
